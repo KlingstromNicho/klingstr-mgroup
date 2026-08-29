@@ -34,8 +34,8 @@
       display: grid;
       place-items: center;
       overflow: hidden;
-      /* The still frame lives here rather than on <video poster>, so it
-         survives when reduced motion hides the video element entirely. */
+      /* The still frame lives here rather than on <video poster>, so it also
+         stands in when iOS refuses to autoplay, e.g. in Low Power Mode. */
       background: var(--ink) url("/hero-poster.jpg") center / cover no-repeat;
     }
 
@@ -122,10 +122,6 @@
       text-transform: uppercase;
       color: rgba(245,243,234,.55);
     }
-
-    @media (prefers-reduced-motion: reduce) {
-      video { display: none; }
-    }
   </style>
 </head>
 <body>
@@ -154,18 +150,5 @@
 
     <p class="foot">Anno 2026 · Stockholm, Sweden</p>
   </main>
-
-  <script>
-    // Honour reduced motion: the .stage background carries the frame, so the
-    // 1.3 MB of footage is pure waste here. Drop the source to abort the fetch.
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      const video = document.querySelector('video');
-      if (video) {
-        video.pause();
-        video.removeAttribute('src');
-        video.load();
-      }
-    }
-  </script>
 </body>
 </html>
