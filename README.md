@@ -1,0 +1,118 @@
+# Klingström Group — Website
+
+Marketing site for Klingström Group, a Scandinavian family holding company.
+Built with **React + Vite + React Router**.
+
+## Run
+
+```bash
+npm install
+npm run dev
+```
+
+Dev server: http://localhost:5173 (also configured in `.claude/launch.json` as `site`).
+
+```bash
+npm run build    # production build → dist/
+npm run preview  # serve the production build locally
+```
+
+## Design
+
+“Modern heritage”, editorial cut: warm paper, deep green, Newsreader serif, brass
+small-caps labels. Structure comes from asymmetric offset layouts, scale and whitespace —
+deliberately not from hairline rules or symmetric card grids.
+
+- **Identity**: the interlocked KG monogram (Playfair Display **regular/400** glyph
+  outlines; the G is cut with an SVG mask where the K's leg crosses it, `CUT = 46`
+  units in a 1000-unit em) — inline SVG in `src/components/icons.jsx` (`KMark`), used
+  in the header, footer and favicon. To swap in the original artwork, replace
+  `K_PATH`/`G_PATH` there. Keep the weight at 400: heavier cuts (500+) read as a blob
+  at header size and out-weigh the serif wordmark beside it.
+- **Palette**: warm paper `#F7F5EF`, ink `#1A1915`, green `#16402B`, brass `#8F7A4B`
+- **Type**: [Newsreader](https://fonts.google.com/specimen/Newsreader) (display serif)
+  and [Inter](https://fonts.google.com/specimen/Inter) (text/labels), from Google Fonts
+- **Layout system**: `.offset` — a sticky brass label column left, content right; big
+  serif statements with stepped supporting paragraphs; principles/tenets as stacked
+  entries with italic serif numerals; holdings as a typographic index; facts as one
+  composed serif passage instead of a stat grid
+- **Header**: three-zone — small-caps links left, centered KG + serif wordmark,
+  quiet Contact link right; renders white over the home hero, flips to paper on scroll
+- **Hero video**: `public/hero.mp4` — the aerial Nordic forest render, trimmed to the
+  first 4.8 s (before the AI-generated artifacts appear) and encoded at 1600 px
+  H.264 CRF 26 (~1.3 MB). Muted loop with scrim; pauses under `prefers-reduced-motion`;
+  `public/hero-poster.jpg` paints first. Source render: `~/Downloads`.
+- **Family-principle band**: `public/road.jpg` — a Swedish tree-lined country road at
+  golden hour, full-bleed behind the proverb, under a dark green-cast overlay
+  (`.band--image::before`) so the cream serif stays legible. `.band--tall` gives the
+  photograph extra height to breathe.
+- **Founder's note**: the signed first-person letter on `/about` is the main
+  family-ownership signal (the pattern Swire, FAM and Møller all use). Copy lives in
+  `src/pages/About.jsx` under `.note` — edit it to your own words.
+- All design tokens live at the top of `src/styles/global.css` in `:root`
+
+## Structure
+
+```
+index.html                  Vite entry (fonts, favicon, meta)
+src/
+  main.jsx                  App bootstrap (router + global CSS)
+  App.jsx                   Routes
+  styles/global.css         The entire design system
+  hooks/usePageTitle.js     Per-page document titles
+  components/
+    Layout.jsx              Header/footer shell, scroll reset, scroll-reveal observer
+    Header.jsx              Sticky nav + mobile menu
+    Footer.jsx
+    icons.jsx               Brand mark + arrows
+  pages/
+    Home.jsx                Hero, principles, holdings preview, family principle, figures
+    Holdings.jsx            Operating companies, principal investments, criteria
+    Approach.jsx            Five tenets, three forms of ownership
+    About.jsx               The name, the founder, timeline, governance
+    Contact.jsx             Correspondence guidance and addresses
+```
+
+## Editing the portfolio
+
+Each holding is one `.holding-row` block — in `src/pages/Holdings.jsx` (full entry) and
+`src/pages/Home.jsx` (preview list). Duplicate a block and change name / category /
+description / link. Use `holding-row--placeholder` (a `div`, not a link) for
+unannounced positions.
+
+## Placeholders to confirm before going live
+
+- **Location** — set to *Sundsvall, Sweden* (hero meta, contact, footer)
+- **Emails** — `contact@klingstromgroup.se`, `companies@klingstromgroup.se` (not registered)
+- **Founding year** — set to 2026
+- **Gradr description** — one-liners in `Home.jsx` and `Holdings.jsx`
+
+## Deploying
+
+### GitHub Pages (configured)
+
+`.github/workflows/deploy.yml` builds and publishes on every push to `main`.
+In the repo, set **Settings → Pages → Build and deployment → Source: GitHub Actions**
+once; after that every push deploys.
+
+Two details make a Vite SPA work on Pages, both already handled:
+
+- **Base path.** A project site is served from `/<repo>/`, so the workflow passes
+  `VITE_BASE` from `actions/configure-pages`, `vite.config.js` normalises it, and
+  `BrowserRouter` takes `basename={import.meta.env.BASE_URL}`. Files in `public/` are
+  referenced through the `asset()` helper in `src/pages/Home.jsx` for the same reason —
+  a bare `/hero.mp4` would 404 under a subpath.
+- **Client-side routing.** The workflow copies `dist/index.html` to `dist/404.html`;
+  Pages serves that for unknown paths and React Router resolves the URL, so
+  `/about` works on a hard refresh.
+
+### Custom domain (klingstromgroup.se)
+
+Add the domain under Settings → Pages. Pages then serves from the root, and
+`configure-pages` reports an empty base path, so `VITE_BASE` becomes `/` with no code
+change needed.
+
+### Anywhere else
+
+`npm run build` produces a static SPA in `dist/`. On Vercel/Netlify SPA fallback is
+automatic (on Netlify, `/* /index.html 200`).
