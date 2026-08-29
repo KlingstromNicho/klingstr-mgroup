@@ -24,7 +24,7 @@ export default function Footer() {
           <div className="footer-col">
             <h4>Reach us</h4>
             <a href="mailto:contact@klingstromgroup.se">contact@klingstromgroup.se</a>
-            <span>Sundsvall, Sweden</span>
+            <span>Stockholm, Sweden</span>
           </div>
         </div>
         <div className="footer-base">

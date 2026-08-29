@@ -25,7 +25,27 @@
   --section-pad: clamp(88px, 11vw, 170px);
 
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* photography grid (see the spread block below) */
+  --content:   calc(var(--container) - 2 * var(--gutter));  /* 1248px at 1440 */
+  --col-gap:   clamp(20px, 3vw, 44px);    /* air between two pictures */
+  --lap:       clamp(40px, 7vw, 112px);   /* how far a picture breaks its field */
+  --stagger:   clamp(48px, 8vw, 130px);   /* the drop between diptych halves */
+  --strip-h:   clamp(132px, 15vw, 216px); /* the horizon */
+  --stamp-w:   clamp(168px, 17vw, 248px); /* the smallest picture on the site */
+  --stick-top: 116px;                     /* the shelf the brass labels ride */
+
+  /* stated once, so the subgrid fallback cannot drift from it */
+  --spread-tracks:
+    [full-start] minmax(var(--gutter), 1fr)
+    [main-start] repeat(12, [col] minmax(0, calc(var(--content) / 12)))
+    [main-end]   minmax(var(--gutter), 1fr)
+    [full-end];
 }
+
+/* a short viewport gets a shallower shelf, or a pinned picture and its
+   caption never appear on screen together */
+@media (max-height: 760px) { :root { --stick-top: 96px; } }
 
 /* ---------- base ---------- */
 
@@ -379,7 +399,7 @@ body.nav-open .nav-toggle span:nth-child(2) { transform: translateY(-3.75px) rot
   align-items: start;
 }
 
-.offset > .label-col { position: sticky; top: 116px; }
+.offset > .label-col { position: sticky; top: var(--stick-top); }
 
 .label-col .hook-link { margin-top: 26px; }
 
@@ -416,21 +436,7 @@ body.nav-open .nav-toggle span:nth-child(2) { transform: translateY(-3.75px) rot
 
 .principle-list { display: grid; gap: clamp(44px, 6vw, 84px); }
 
-.principle {
-  display: grid;
-  grid-template-columns: 96px minmax(0, 1fr);
-  gap: clamp(18px, 3vw, 48px);
-  align-items: baseline;
-}
-
-.principle-num {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: clamp(26px, 2.6vw, 38px);
-  font-weight: 380;
-  color: var(--brass);
-  line-height: 1;
-}
+.principle { display: block; }
 
 .principle h3 {
   font-size: clamp(24px, 2.4vw, 32px);
@@ -524,15 +530,15 @@ a.index-row:hover .index-arrow { color: var(--green); transform: translateX(6px)
   background: var(--green-deep) center / cover no-repeat;
 }
 
-/* dark overlay — deep enough for cream serif to sit calmly on the image,
-   with a green cast so the photograph belongs to the palette */
+/* overlay — a green cast that keeps the cream serif legible while leaving the
+   photograph visible. Weighted to the bottom third, where the quote sits. */
 .band--image::before {
   content: "";
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(to bottom, rgba(9, 20, 13, 0.70) 0%, rgba(9, 20, 13, 0.52) 45%, rgba(9, 20, 13, 0.74) 100%),
-    linear-gradient(90deg, rgba(9, 20, 13, 0.36) 0%, rgba(9, 20, 13, 0) 62%);
+    linear-gradient(to bottom, rgba(9, 20, 13, 0.46) 0%, rgba(9, 20, 13, 0.30) 38%, rgba(9, 20, 13, 0.66) 100%),
+    linear-gradient(90deg, rgba(9, 20, 13, 0.34) 0%, rgba(9, 20, 13, 0) 58%);
 }
 
 .band--tall { padding-block: clamp(120px, 17vw, 250px); }
@@ -540,6 +546,11 @@ a.index-row:hover .index-arrow { color: var(--green); transform: translateX(6px)
 .band .container { position: relative; z-index: 1; }
 
 .band .eyebrow { color: rgba(245, 243, 234, 0.66); }
+.band--image .eyebrow { color: rgba(245, 243, 234, 0.88); }
+
+.band--image blockquote,
+.band--image figcaption,
+.band--image .eyebrow { text-shadow: 0 1px 24px rgba(9, 20, 13, 0.55); }
 
 .band blockquote {
   font-family: var(--serif);
@@ -560,6 +571,448 @@ a.index-row:hover .index-arrow { color: var(--green); transform: translateX(6px)
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: rgba(245, 243, 234, 0.6);
+}
+
+.band--image figcaption { color: rgba(245, 243, 234, 0.8); }
+
+/* ---------- plates (photography) ----------
+   One component, several treatments, so no two photographs on the site are
+   presented the same way: bleed (edge to edge), wide (container width),
+   right / left (paired with the caption beside it), portrait (tall column)
+   and small (a snapshot offset into the margin). */
+
+.plate-section { padding-block: clamp(56px, 7vw, 112px); }
+.plate-section--tight { padding-top: clamp(12px, 2vw, 32px); }
+
+.plate { margin: 0; }
+
+.plate-frame {
+  overflow: hidden;
+  background: var(--panel);
+}
+
+/* no scrim and no type on top — the picture is left alone */
+.plate-frame img {
+  width: 100%;
+  height: auto;           /* let the ratio win over the img height attribute */
+  aspect-ratio: var(--plate-ratio, 16 / 9);
+  min-height: var(--plate-min, 240px);   /* a token, so a small treatment may be small */
+  object-fit: cover;
+  object-position: var(--plate-focus, center);
+  transform: scale(1.06);
+  transition: transform 1.8s var(--ease);
+}
+
+.reveal.visible .plate-frame img { transform: none; }
+
+.plate-note {
+  font-family: var(--serif);
+  font-size: clamp(17px, 1.5vw, 22px);
+  font-style: italic;
+  line-height: 1.45;
+  color: var(--grey);
+  max-width: 26em;
+}
+
+.plate figcaption .eyebrow + .plate-note { margin-top: 12px; }
+
+/* --- bleed: edge to edge, the one full-width photograph --- */
+
+.plate--bleed .plate-frame img { --plate-min: 320px; }
+
+/* --- bleed & wide: caption sits underneath, on the editorial grid --- */
+
+.plate--bleed figcaption,
+.plate--wide figcaption {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 9fr);
+  gap: clamp(28px, 4vw, 72px);
+  align-items: baseline;
+  margin-top: clamp(20px, 2.4vw, 32px);
+}
+
+.plate--bleed figcaption {
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.plate--bleed figcaption .plate-note,
+.plate--wide figcaption .plate-note { margin-top: 0; }
+
+/* --- paired: photograph in one column, caption in the other --- */
+
+.plate--right,
+.plate--left,
+.plate--portrait,
+.plate--small {
+  display: grid;
+  gap: clamp(24px, 4vw, 64px);
+  align-items: end;
+}
+
+.plate--right { grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); }
+.plate--right .plate-frame { grid-area: 1 / 2; }
+.plate--right figcaption { grid-area: 1 / 1; }
+
+.plate--left { grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); }
+.plate--left .plate-frame { grid-area: 1 / 1; }
+.plate--left figcaption { grid-area: 1 / 2; }
+
+/* tall column, caption reading as a pull quote beside it */
+.plate--portrait {
+  grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+  align-items: center;
+}
+.plate--portrait .plate-frame { grid-area: 1 / 1; }
+.plate--portrait figcaption { grid-area: 1 / 2; }
+.plate--portrait .plate-note {
+  font-size: clamp(21px, 2.2vw, 32px);
+  color: var(--ink);
+  max-width: 15em;
+}
+
+/* a snapshot, held off the left edge */
+.plate--small { grid-template-columns: minmax(0, 3fr) minmax(0, 4fr) minmax(0, 4fr); }
+.plate--small .plate-frame { grid-area: 1 / 3; }
+.plate--small figcaption { grid-area: 1 / 2; }
+
+/* ============================================================
+   Photography v6 — the spread
+   One grid governs every photograph: twelve text columns
+   identical to .container, plus a margin track on each side.
+   A picture holds the text line at one end and runs out to the
+   paper's edge at the other. Nothing here uses 100vw, so no
+   bleed can push the page sideways and nothing needs clipping.
+
+   THREE THINGS CANCEL A PIN, and all three exist in this file:
+     · a clipping ancestor       -> .band { overflow: hidden }
+     · align-items: end/stretch  -> .plate--right/--left/--portrait/--small
+     · no runway after the item  -> give the parent padding-bottom
+   The running column opts out of each on purpose. Nest it inside
+   a band, or hand it a paired-plate class, and it stops sticking
+   with nothing to tell you.
+   ============================================================ */
+
+/* ---------- the spread ---------- */
+
+.spread {
+  display: grid;
+  grid-template-columns: var(--spread-tracks);
+  column-gap: 0;
+  row-gap: clamp(20px, 2.6vw, 34px);
+  align-items: start;          /* required — `end` would kill the running column */
+}
+
+/* text keeps the container measure unless told otherwise. :where() holds this
+   at specificity 0, so a treatment always wins regardless of source order. */
+.spread > :where(*) { grid-column: main-start / main-end; }
+
+.spread-section        { padding-block: clamp(64px, 8vw, 128px); }
+.spread-section--tight { padding-top: clamp(12px, 2vw, 32px); }
+
+/* subgrid does the placement. The fallback is the same track list, not
+   display:contents — identical geometry, and figure/figcaption keep their
+   roles in the accessibility tree. */
+@supports not (grid-template-columns: subgrid) {
+  .plate--recto, .plate--verso, .diptych,
+  .band--split .spread { grid-template-columns: var(--spread-tracks); }
+}
+
+/* ---------- I. the spread plate: one edge bleeds, one edge holds ---------- */
+
+.plate--recto,
+.plate--verso {
+  --plate-min: 140px;
+  grid-column: full-start / full-end;
+  display: grid;
+  grid-template-columns: subgrid;
+}
+
+/* recto — bleeds right, caption's feet on the picture's feet */
+.plate--recto { align-items: end; }
+.plate--recto .plate-frame { grid-column: col 4 / full-end; grid-row: 1; }
+.plate--recto figcaption {
+  grid-column: col 1 / col 4;
+  grid-row: 1;
+  padding-right: var(--col-gap);
+}
+
+/* verso — bleeds left, and the caption sits at the picture's HEAD across an
+   empty column, so it is a second composition rather than the first mirrored */
+.plate--verso { align-items: start; }
+.plate--verso .plate-frame { grid-column: full-start / col 9; grid-row: 1; }
+.plate--verso figcaption {
+  grid-column: col 10 / main-end;
+  grid-row: 1;
+  padding-top: 2px;            /* lifts the eyebrow's cap-height onto the frame line */
+}
+
+.plate--recto .plate-note,
+.plate--verso .plate-note {
+  font-size: clamp(16px, 1.35vw, 20px);
+  max-width: 17em;
+}
+
+/* ---------- II. the diptych: unequal widths, unequal heights, one edge out ---------- */
+
+.diptych {
+  grid-column: full-start / full-end;
+  display: grid;
+  grid-template-columns: subgrid;
+  align-items: start;
+}
+
+/* the wide one, holding the top line. Margin, not padding, so the frame's
+   own clipped edge stays clean. */
+.diptych .plate-frame--a {
+  --plate-min: 200px;
+  grid-column: full-start / col 8;
+  grid-row: 1;
+  margin-right: var(--col-gap);
+}
+
+/* the tall one, dropped, never landing on the other's baseline */
+.diptych .plate-frame--b {
+  --plate-min: 0px;
+  grid-column: col 8 / main-end;
+  grid-row: 1 / span 2;
+  margin-top: var(--stagger);
+}
+
+/* the notch is not negative space — it is a cell, and type occupies it at
+   picture scale. Fixed measure: keep this line under about twenty words. */
+.diptych-note {
+  grid-column: col 1 / col 6;
+  grid-row: 2;
+  align-self: start;
+  margin-top: clamp(18px, 2vw, 26px);
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 380;
+  font-size: clamp(21px, 2.3vw, 32px);
+  line-height: 1.24;
+  letter-spacing: -0.005em;
+  color: var(--ink);
+}
+
+.diptych-note .eyebrow { margin-bottom: 16px; }
+
+/* ---------- III. the running column: a picture that keeps pace with a list ---------- */
+
+/* the label and the list keep the editorial offset they already have —
+   only now inside eight columns instead of twelve */
+.spread--running .running-body {
+  grid-column: col 1 / col 9;
+  grid-row: 1 / span 2;
+  gap: clamp(24px, 3vw, 52px);
+  /* runway: the pin's travel stops depending on how many tenets someone writes */
+  padding-bottom: clamp(0px, 12svh, 140px);
+}
+
+.plate--column {
+  grid-column: col 10 / full-end;
+  grid-row: 1 / span 2;
+  align-self: start;
+  /* held to the paper's right edge, but capped: a pinned picture and its
+     caption must both fit between the shelf and the fold on a laptop */
+  justify-self: end;
+  width: 100%;
+  max-width: 460px;
+  position: sticky;
+  top: var(--stick-top);
+}
+
+/* .reveal puts translateY(20px) on the figure; on a pinned figure that
+   fights the sticky offset for the first 850ms. Fade it in instead. */
+.plate--column.reveal { transform: none; }
+
+.plate--column .plate-note {
+  margin-top: 14px;
+  font-size: clamp(15px, 1.2vw, 18px);
+  max-width: 19em;
+}
+
+/* if the screen is too short to hold the picture and its caption, it stops
+   pretending to stick */
+@media (max-height: 800px) {
+  .plate--column { position: static; }
+}
+
+/* ---------- IV. the split band: quote on green, photograph left alone ---------- */
+
+.band--split {
+  --band-pad: clamp(88px, 11vw, 156px);
+  position: relative;
+  background: var(--green);
+  color: #F5F3EA;
+  padding-block: var(--band-pad);
+  overflow: visible;           /* .band's overflow:hidden would clip the break-out */
+
+  /* the break-out pays for itself: the picture rises --lap above the band,
+     and the band sits --lap below its neighbour, so the clearance is always
+     the previous section's bottom padding — whatever --lap is set to. */
+  margin-top: var(--lap);
+}
+
+.band--split .spread { align-items: center; }
+
+.band--split .band-copy {
+  grid-column: col 1 / col 6;
+  grid-row: 1;
+  padding-right: var(--col-gap);
+}
+
+.band--split .band-copy blockquote {
+  margin-top: 24px;
+  font-family: var(--serif);
+  font-size: clamp(26px, 2.6vw, 38px);
+  font-weight: 380;
+  font-style: italic;
+  line-height: 1.2;
+  max-width: 13em;
+}
+
+.band--split .band-copy .eyebrow    { color: rgba(245, 243, 234, 0.66); }
+.band--split .band-copy figcaption {
+  margin-top: 26px;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 550;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(245, 243, 234, 0.6);
+}
+
+/* stretch with negative margins resolves the border-box larger than the grid
+   area — that is what pushes the picture up past the green's top edge */
+.band--split .band-figure {
+  grid-column: col 6 / full-end;
+  grid-row: 1;
+  align-self: stretch;
+  margin-top: calc(-1 * (var(--band-pad) + var(--lap)));
+  margin-bottom: calc(-1 * var(--band-pad) * 0.55);
+  min-height: clamp(380px, 40vw, 620px);
+  overflow: hidden;
+  background: var(--green-deep);
+  display: grid;               /* a definite box, so the img's height:100% resolves */
+  place-items: stretch;
+}
+
+.band--split .band-figure img {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  aspect-ratio: auto;
+  object-fit: cover;
+  object-position: var(--plate-focus, 48% 54%);
+}
+
+/* ---------- V. the horizon: all width, no height ----------
+   No scrim, nothing written on the picture, and the quote set beneath it
+   large enough that the type is the taller object. The inverse of a spread. */
+
+.horizon { padding-block: clamp(44px, 6vw, 92px) var(--section-pad); }
+
+.horizon-strip {
+  height: var(--strip-h);
+  overflow: hidden;
+  background: var(--panel);
+}
+
+.horizon-strip img {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  aspect-ratio: auto;
+  object-fit: cover;
+  object-position: var(--plate-focus, 50% 58%);
+  transform: scale(1.05);
+  transition: transform 2.1s var(--ease);
+}
+
+.reveal.visible .horizon-strip img,
+.horizon-strip.reveal.visible img,
+.reveal.visible .band-figure img,
+.band-figure.reveal.visible img { transform: none; }
+
+.horizon .container { margin-top: clamp(40px, 5vw, 72px); }
+.horizon .offset > .label-col { position: static; }
+
+.horizon blockquote {
+  font-family: var(--serif);
+  font-size: clamp(28px, 4.3vw, 60px);
+  font-weight: 380;
+  font-style: italic;
+  letter-spacing: -0.006em;
+  line-height: 1.16;
+  max-width: 15em;
+}
+
+.horizon blockquote em { font-style: italic; color: var(--green); }
+
+.horizon figcaption {
+  margin-top: clamp(18px, 2vw, 28px);
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 550;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--brass);
+}
+
+/* the band the owner asked for, with the scrim deleted: the strip is laid
+   into a green field and the quote is set on the green beneath it */
+.horizon--green {
+  background: var(--green);
+  color: #F5F3EA;
+  padding-block: clamp(64px, 8vw, 120px) clamp(76px, 9.5vw, 150px);
+}
+
+.horizon--green blockquote em  { color: rgba(245, 243, 234, 0.72); }
+.horizon--green .eyebrow       { color: rgba(245, 243, 234, 0.66); }
+.horizon--green figcaption     { color: rgba(245, 243, 234, 0.6); }
+.horizon--green .horizon-strip { background: var(--green-deep); }
+
+/* the closing hand: the line first, then the picture last, welded to the
+   footer with no paper between them */
+.horizon--close {
+  --strip-h: clamp(200px, 26vw, 420px);
+  padding-bottom: 0;
+}
+
+.horizon--close .container { margin-top: 0; margin-bottom: clamp(40px, 5vw, 72px); }
+
+/* past 1.3x the 1376px sources are being invented rather than shown. A
+   widescreen plate centred on paper is a better answer than a soft picture. */
+@media (min-width: 1792px) {
+  .horizon-strip { max-width: 1376px; margin-inline: auto; }
+}
+
+/* ---------- VI. the stamp: the smallest picture on the site ----------
+   Lives in the sticky brass label rail of an ordinary .offset section and
+   rides it for the whole length of the section beside it. */
+
+.label-col .plate--stamp {
+  --plate-min: 0px;            /* the 240px floor would eat a stamp whole */
+  display: block;
+  width: var(--stamp-w);
+  margin-top: clamp(22px, 2.6vw, 36px);
+}
+
+.plate--stamp .plate-frame img { transform: scale(1.1); }
+
+.plate--stamp figcaption { margin-top: 11px; }
+.plate--stamp .eyebrow   { font-size: 10px; letter-spacing: 0.2em; }
+
+.plate--stamp .plate-note {
+  margin-top: 5px;
+  font-family: var(--sans);
+  font-style: normal;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--grey-soft);
+  max-width: 15em;
 }
 
 /* ---------- facts (one composed serif passage) ---------- */
@@ -583,19 +1036,9 @@ a.index-row:hover .index-arrow { color: var(--green); transform: translateX(6px)
 
 .tenet {
   display: grid;
-  grid-template-columns: 96px minmax(0, 4fr) minmax(0, 6fr);
-  gap: clamp(18px, 3vw, 48px);
+  grid-template-columns: minmax(0, 4fr) minmax(0, 6fr);
+  gap: clamp(14px, 3vw, 48px);
   align-items: baseline;
-}
-
-.tenet-num {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: clamp(26px, 2.6vw, 38px);
-  font-weight: 380;
-  color: var(--brass);
-  line-height: 1;
-  white-space: nowrap;
 }
 
 .tenet h3 {
@@ -694,7 +1137,7 @@ a.index-row:hover .index-arrow { color: var(--green); transform: translateX(6px)
   align-items: start;
 }
 
-.split .sticky-label { position: sticky; top: 116px; }
+.split .sticky-label { position: sticky; top: var(--stick-top); }
 
 .sticky-label h2 {
   margin-top: 16px;
@@ -858,10 +1301,7 @@ a.index-row:hover .index-arrow { color: var(--green); transform: translateX(6px)
   .statement-aside { margin-left: 0; }
   .split { grid-template-columns: 1fr; }
   .split .sticky-label { position: static; margin-bottom: 8px; }
-  .principle { grid-template-columns: 56px 1fr; }
-  .tenet { grid-template-columns: 56px 1fr; }
-  .tenet p:first-of-type { margin-top: 12px; }
-  .tenet > p, .tenet h3 { grid-column: 2; }
+  .tenet { grid-template-columns: 1fr; gap: 12px; }
   .contact-grid { grid-template-columns: 1fr; }
   .footer-head { flex-direction: column-reverse; align-items: flex-start; gap: 40px; }
   .footer-cols { grid-template-columns: 1fr 1fr; }
@@ -869,6 +1309,93 @@ a.index-row:hover .index-arrow { color: var(--green); transform: translateX(6px)
   .timeline-item { grid-template-columns: 90px 1fr; }
   .hero-foot { flex-direction: column; align-items: flex-start; gap: 24px; }
   .index-cat { margin-left: 0; width: 100%; order: 3; }
+  .plate--bleed figcaption, .plate--wide figcaption { grid-template-columns: 1fr; gap: 14px; }
+  .plate--right, .plate--left, .plate--portrait, .plate--small {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    align-items: start;
+  }
+  .plate--right .plate-frame, .plate--left .plate-frame,
+  .plate--portrait .plate-frame, .plate--small .plate-frame { grid-area: auto; }
+  .plate--right figcaption, .plate--left figcaption,
+  .plate--portrait figcaption, .plate--small figcaption { grid-area: auto; }
+  .plate--portrait .plate-note { font-size: clamp(19px, 4.6vw, 26px); }
+}
+
+/* v6 photography: the spread grid stands down entirely below 960px */
+/* The grid stands down entirely: .spread becomes a block with the ordinary
+   gutter, which makes every grid-column placement inert with nothing to
+   unwind. The rule the collapse must obey is that no treatment may become
+   the same plain full-width photograph as its neighbour. */
+@media (max-width: 960px) {
+  :root { --lap: 0px; --stagger: 0px; }
+
+  .spread {
+    display: block;
+    max-width: var(--container);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  .plate--recto, .plate--verso, .diptych,
+  .band--split .spread { display: block; }
+
+  /* the one-edge idea cannot survive a 375px screen, so both edges go */
+  .plate--recto .plate-frame,
+  .plate--verso .plate-frame,
+  .diptych .plate-frame { margin-inline: calc(-1 * var(--gutter)); }
+
+  .plate--recto figcaption,
+  .plate--verso figcaption {
+    padding: 0;
+    margin-top: 16px;
+  }
+
+  /* the diptych stacks, but the small one stays visibly the small one —
+     the composition is about inequality, not adjacency */
+  .diptych .plate-frame--a { margin-right: 0; }
+  .diptych .plate-frame--b {
+    margin-top: clamp(56px, 14vw, 96px);
+    margin-inline: calc(-1 * var(--gutter)) auto;
+    max-width: 76%;
+  }
+  .diptych-note {
+    margin-top: clamp(22px, 5vw, 32px);
+    font-size: clamp(20px, 5vw, 27px);
+  }
+
+  /* the running column lets go and falls under the list, capped so a
+     portrait does not eat a whole screen */
+  .spread--running .running-body { padding-bottom: 0; gap: 12px; }
+  .plate--column { position: static; }
+  .plate--column .plate-frame {
+    max-width: 420px;
+    margin-top: clamp(40px, 7vw, 64px);
+  }
+
+  /* the split band rebuilds as a green panel with the picture flush beneath
+     it, edge to edge — the break-out survives as a junction, not an overlap */
+  .band--split { margin-top: 0; padding-block: var(--band-pad) 0; }
+  .band--split .band-copy { padding-right: 0; }
+  .band--split .band-figure {
+    margin: clamp(40px, 7vw, 64px) calc(-1 * var(--gutter)) 0;
+    min-height: 0;
+    display: block;
+  }
+  .band--split .band-figure img { height: auto; aspect-ratio: 16 / 9; }
+
+  /* the horizon stays thin, so the type is still the taller object */
+  .horizon { --strip-h: clamp(112px, 24vw, 156px); }
+  .horizon--close { --strip-h: clamp(150px, 34vw, 260px); }
+  .horizon blockquote { font-size: clamp(26px, 6.4vw, 38px); }
+  .horizon .container { margin-top: clamp(28px, 6vw, 44px); }
+
+  /* the label rail goes full width; the stamp does not follow it */
+  .label-col .plate--stamp {
+    --stamp-w: clamp(150px, 34vw, 200px);
+    margin-top: 24px;
+    margin-bottom: 30px;
+  }
 }
 
 @media (max-width: 800px) {

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import usePageTitle from '../hooks/usePageTitle'
 import { Arrow } from '../components/icons'
+import Plate from '../components/Plate'
 
 export default function Holdings() {
   usePageTitle('Holdings — Klingström Group')
@@ -14,6 +15,17 @@ export default function Holdings() {
           <p className="lede reveal reveal-d2">A concentrated group of operating companies and principal investments — each held with an owner's care and a generational horizon.</p>
         </div>
       </section>
+
+      <Plate
+        file="room.jpg"
+        variant="verso"
+        focus="50% 50%"
+        tight
+        eager
+        alt="A long wooden table and a typewriter in a plain room with a stone fireplace."
+        label="The long table"
+        note="A table set for a handful of companies, not a hundred."
+      />
 
       {/* Operating companies */}
       <section className="section">
@@ -58,6 +70,15 @@ export default function Holdings() {
         <div className="container offset">
           <div className="label-col reveal">
             <span className="section-num">Criteria</span>
+            <Plate
+              variant="stamp"
+              file="room.jpg"
+              ratio="4 / 3"
+              focus="64% 46%"
+              alt="A detail of the long table, seen small."
+              label="Detail"
+              note="The same room, in the ordinary course of a Tuesday."
+            />
           </div>
           <div>
             <h2 className="reveal">What we look for.</h2>

@@ -1,4 +1,5 @@
 import usePageTitle from '../hooks/usePageTitle'
+import Band from '../components/Band'
 
 export default function Contact() {
   usePageTitle('Contact — Klingström Group')
@@ -41,12 +42,21 @@ export default function Contact() {
             </div>
             <div className="contact-block">
               <h3>Office</h3>
-              <p className="contact-value">Sundsvall, Sweden</p>
+              <p className="contact-value">Stockholm, Sweden</p>
               <p className="contact-note">Visits by appointment.</p>
             </div>
           </div>
         </div>
       </section>
+
+      <Band
+        variant="horizon"
+        close
+        file="window.jpg"
+        focus="50% 62%"
+        eyebrow="Stockholm"
+        quote="The desk is here, the post is read, and the good letters are kept."
+      />
     </>
   )
 }

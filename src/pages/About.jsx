@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom'
 import usePageTitle from '../hooks/usePageTitle'
 import { Arrow } from '../components/icons'
+import Plate from '../components/Plate'
+import Band from '../components/Band'
 
 export default function About() {
   usePageTitle('About — Klingström Group')
@@ -14,6 +16,16 @@ export default function About() {
           <p className="lede reveal reveal-d2">Swire began in 1816 with one trader in Liverpool. The Wallenberg sphere with one bank in 1856. Møller with one ship in 1904. Every century of heritage started as a single decision to build carefully — and keep building.</p>
         </div>
       </section>
+
+      <Plate
+        file="supper.jpg"
+        variant="bleed"
+        tight
+        eager
+        alt="A long table laid with linen, candles and wine outside a stone house at dusk."
+        label="On relationships"
+        note="A countess once told Nicholai that a relationship should last three hundred years. We took her at her word."
+      />
 
       {/* The name */}
       <section className="section">
@@ -41,7 +53,7 @@ export default function About() {
             <p>What I want from the next fifty years is plain enough: that every company here is better for having been owned by us, and that whoever holds this seat after me inherits something worth keeping.</p>
             <div className="note-sign">
               <div className="note-name">Nicholai Klingström</div>
-              <div className="note-role">Founder · Sundsvall, 2026</div>
+              <div className="note-role">Founder · Stockholm, 2026</div>
             </div>
           </div>
         </div>
@@ -79,17 +91,13 @@ export default function About() {
         </div>
       </section>
 
-      {/* Quote band */}
-      <section className="band">
-        <div className="container offset">
-          <div className="label-col reveal">
-            <span className="eyebrow">On ownership</span>
-          </div>
-          <figure>
-            <blockquote className="reveal reveal-d1">A company is not something you hold. It is something you are held responsible for.</blockquote>
-          </figure>
-        </div>
-      </section>
+      <Band
+        variant="split"
+        file="interior.jpg"
+        focus="50% 54%"
+        eyebrow="On ownership"
+        quote="A company is not something you hold. It is something you are held responsible for."
+      />
 
       {/* Governance */}
       <section className="section">

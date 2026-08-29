@@ -2,10 +2,9 @@ import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import usePageTitle from '../hooks/usePageTitle'
 import { Arrow } from '../components/icons'
-
-// Files in public/ — resolved against the deploy base so they also work when the
-// site is served from a project subpath (GitHub Pages).
-const asset = (file) => `${import.meta.env.BASE_URL}${file}`
+import { asset } from '../lib/asset'
+import Plate from '../components/Plate'
+import Band from '../components/Band'
 
 export default function Home() {
   usePageTitle('Klingström Group — A Scandinavian Holding Company')
@@ -67,22 +66,19 @@ export default function Home() {
           </div>
           <div className="principle-list">
             <article className="principle reveal">
-              <span className="principle-num">I.</span>
-              <div>
+                <div>
                 <h3>The long view <span>Långsiktighet</span></h3>
                 <p>Decisions are weighed against decades, not quarters. We would rather grow slowly and surely than quickly and fragile.</p>
               </div>
             </article>
             <article className="principle reveal">
-              <span className="principle-num">II.</span>
-              <div>
+                <div>
                 <h3>Stewardship <span>Förvaltarskap</span></h3>
                 <p>What one owns, one must care for. We take governance seriously, keep our word, and leave every company better than we found it.</p>
               </div>
             </article>
             <article className="principle reveal">
-              <span className="principle-num">III.</span>
-              <div>
+                <div>
                 <h3>Craft <span>Hantverk</span></h3>
                 <p>We are operators before we are investors. We build with modern tools and old standards — quality that outlives its makers.</p>
               </div>
@@ -90,6 +86,15 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <Plate
+        file="desk.jpg"
+        variant="recto"
+        ratio="1376 / 512"
+        alt="An open notebook, a brass lamp and a cup of coffee on a walnut desk by a window."
+        label="Stockholm"
+        note="Most of the work is ordinary: read carefully, decide slowly, write it down."
+      />
 
       {/* Holdings */}
       <section className="section section--flush-top">
@@ -118,18 +123,15 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Family principle — image band */}
-      <section className="band band--image band--tall" style={{ backgroundImage: `url(${asset('road.jpg')})` }}>
-        <div className="container offset">
-          <div className="label-col reveal">
-            <span className="eyebrow">The family principle</span>
-          </div>
-          <figure>
-            <blockquote className="reveal reveal-d1">”Det man äger skall man vårda.”</blockquote>
-            <figcaption className="reveal reveal-d2">What one owns, one must care for.</figcaption>
-          </figure>
-        </div>
-      </section>
+      <Band
+        variant="horizon"
+        green
+        file="road.jpg"
+        focus="50% 58%"
+        eyebrow="The family principle"
+        quote="”Det man äger skall man vårda.”"
+        caption="What one owns, one must care for."
+      />
 
       {/* In brief */}
       <section className="section">
