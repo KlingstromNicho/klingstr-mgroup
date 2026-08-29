@@ -35,7 +35,7 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          # '/klingstrom-group' for a project site, '' for a user site or custom domain
+          # '/klingstr-mgroup' for a project site, '' for a user site or custom domain
           VITE_BASE: ${{ steps.pages.outputs.base_path }}
 
       # Client-side routing: Pages serves 404.html for unknown paths, so hand it
