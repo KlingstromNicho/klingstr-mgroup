@@ -106,11 +106,19 @@ Two details make a Vite SPA work on Pages, both already handled:
   Pages serves that for unknown paths and React Router resolves the URL, so
   `/about` works on a hard refresh.
 
-### Custom domain (klingstromgroup.se)
+### Custom domain (klingstromgroup.com)
 
-Add the domain under Settings → Pages. Pages then serves from the root, and
-`configure-pages` reports an empty base path, so `VITE_BASE` becomes `/` with no code
-change needed.
+`public/CNAME` holds the domain and ships in the Pages artifact, which is what sets the
+custom domain — so it lives in git rather than only in a settings panel.
+
+DNS at Squarespace points the apex at GitHub's four Pages IPs and `www` at
+`klingstromnicho.github.io`. After the first green deploy, tick **Enforce HTTPS** under
+Settings → Pages once the certificate is issued.
+
+`vite.config.js` reads `public/CNAME` directly to decide the base path. It deliberately
+does not trust the workflow's `base_path`: on the first deploy Pages does not know about
+the domain yet and still reports `/klingstr-mgroup`, which would ship assets pointing at
+a path the custom domain never serves.
 
 ### Anywhere else
 
