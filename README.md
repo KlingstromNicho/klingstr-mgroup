@@ -88,6 +88,25 @@ unannounced positions.
 - **Founding year** — set to 2026
 - **Gradr description** — one-liners in `Home.jsx` and `Holdings.jsx`
 
+## Branches
+
+| Branch | Contents | Deploys |
+|---|---|---|
+| `production` | Under-construction holding page (`index.html`, no React) | **Yes** → klingstromgroup.com |
+| `dev` | The full site — everything below | No |
+| `main` | Shared ancestor of the two | No |
+
+Work on `dev`. Nothing you push there can change the live site: the workflow
+only triggers on `production`.
+
+To launch, merge `dev` into `production` and take dev's `index.html` — that one
+file is the entire difference between the branches:
+
+```bash
+git checkout production && git merge dev
+git checkout dev -- index.html && git commit && git push
+```
+
 ## Deploying
 
 ### GitHub Pages (configured)
