@@ -215,6 +215,24 @@ h1, h2, h3 {
   gap: 16px;
 }
 
+/* The whole left cell — hamburger, crest and nav — so the header grid keeps
+   three columns at every width. Below 800px the nav leaves the flow for a
+   fixed drawer and this holds the hamburger alone. */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: clamp(18px, 2.6vw, 34px);
+}
+
+/* the arms in the corner, at the nav's own weight: an ornament that sits in
+   the same tonal band as the links beside it, not a second logo competing
+   with the wordmark in the middle */
+.header-crest {
+  --crest-w: 32px;
+  color: var(--ink);
+  opacity: 0.8;
+}
+
 .site-nav {
   display: flex;
   align-items: center;
@@ -284,7 +302,6 @@ h1, h2, h3 {
   border: none;
   cursor: pointer;
   padding: 10px;
-  justify-self: start;
 }
 
 .nav-toggle span {
@@ -307,6 +324,7 @@ body.nav-open .nav-toggle span:nth-child(2) { transform: translateY(-3.75px) rot
 .site-header.light .header-link { color: #fff; }
 .site-header.light .brand-name span { color: rgba(255,255,255,0.72); }
 .site-header.light .brand-mark { color: #fff; }
+.site-header.light .header-crest { color: #fff; }
 .site-header.light .nav-toggle span { background: #fff; }
 
 /* ---------- hero (home, video) ---------- */
@@ -363,6 +381,51 @@ body.nav-open .nav-toggle span:nth-child(2) { transform: translateY(-3.75px) rot
   font-size: clamp(14.5px, 1.25vw, 16.5px);
   color: rgba(255, 255, 255, 0.85);
   max-width: 30em;
+}
+
+/* ---------- the capital hero: the mark on a photograph ----------
+   This picture will not carry cream type on its own. Its left third is a lit
+   wall and a brass lamp, measured at luminance 190+, where cream lands at about
+   2.4:1 — the mark would vanish exactly where the type column sits. So it takes
+   the same .hero-scrim the home hero uses, weighted to the foot, and the block
+   sits low where the walnut table is already the darkest thing in frame.
+
+   Deliberately shorter than the home hero: that full-height opening belongs to
+   the Group. A company of the Group gets a picture, not the whole screen. */
+
+/* Height is taken from the picture rather than picked: the library plate is
+   1376 x 768, so at 56vw the frame matches its proportion and the cover crop
+   falls away almost entirely — the shelves and the table both stay whole. The
+   svh cap keeps it inside a short laptop screen, the px floor inside a phone. */
+.hero--photo {
+  min-height: clamp(560px, 56vw, 90svh);
+  background: var(--green-deep) center / cover no-repeat;
+  padding-top: 150px;
+  padding-bottom: clamp(60px, 9vh, 104px);
+}
+
+/* the mark lands on the palest part of the frame — the lit wall beside the
+   lamp — so it carries a tight shadow as well as a soft one. The tight pass is
+   what actually separates the strokes; the soft pass seats the whole mark. */
+.hero--photo .hero-mark {
+  color: #F5F3EA;
+  margin-bottom: clamp(20px, 2.4vw, 32px);
+  filter:
+    drop-shadow(0 0 12px rgba(9, 20, 13, 0.9))
+    drop-shadow(0 3px 30px rgba(9, 20, 13, 0.72));
+}
+
+.hero--photo h1 {
+  font-size: clamp(38px, 5.2vw, 76px);
+  max-width: 11em;
+  text-shadow: 0 1px 26px rgba(9, 20, 13, 0.62);
+}
+
+.hero--photo .hero-sub {
+  margin-top: clamp(24px, 3vw, 38px);
+  max-width: 34em;
+  color: rgba(245, 243, 234, 0.9);
+  text-shadow: 0 1px 18px rgba(9, 20, 13, 0.7);
 }
 
 /* interior page hero */
@@ -499,7 +562,9 @@ a.index-row:hover .index-arrow { color: var(--green); transform: translateX(6px)
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--grey-soft);
+  /* --grey, not --grey-soft: this is the only place a reader learns what
+     sector a holding is in, and soft measured 2.68:1 on paper. */
+  color: var(--grey);
   margin-left: auto;
 }
 
@@ -1069,6 +1134,240 @@ a.index-row:hover .index-arrow { color: var(--green); transform: translateX(6px)
 
 .plain-list strong { color: var(--ink); font-weight: 550; }
 
+/* ---------- the arms, over the long table (about) ----------
+   The emblem is laid on the photograph rather than set beside it, held to the
+   left where the house wall is in shadow and the grass below it darker still.
+   No scrim: the picture is left alone, and the mark carries its own soft shadow
+   instead — which is what holds the engraving's finest lines over the stone.
+
+   The plate is line art on a transparent ground, so it is used as a MASK and
+   painted, not tinted with invert(): that way the cream is the site's cream
+   rather than whatever a filter happens to produce. The mask url arrives as
+   --crest from the page, so it resolves against the deploy base like every
+   other public file — a bare url() in this stylesheet would not. */
+
+.plate-frame { position: relative; }
+
+.arms-overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  align-content: center;
+  /* one column, as wide as the crest, with the motto centred inside it — the
+     ribbon reads as part of the emblem rather than as a caption that happens
+     to share its left edge */
+  justify-content: start;
+  justify-items: center;
+  text-align: center;
+  /* off the text grid entirely and held close to the paper's edge — a mark
+     stamped on the picture, not a line of copy. Its own inset rather than the
+     container's, so it does not drift outward as the viewport widens; the
+     floor keeps a phone's gutter under it. */
+  padding-inline: clamp(20px, 3.2vw, 40px);
+  padding-block: clamp(20px, 3vw, 44px);
+  color: #F5F3EA;
+  pointer-events: none;
+}
+
+/* The arms at small sizes: a seal rather than an emblem. Same mask technique
+   as .arms-crest below — line art on a transparent ground, painted in
+   currentColor so it takes the cream of whatever ground it lands on. The width
+   is a custom property because each placement wants a different one, and the
+   aspect ratio is the plate's own so nothing has to be measured twice. */
+.crest-mark {
+  display: block;
+  width: var(--crest-w, 44px);
+  aspect-ratio: 800 / 840;
+  flex: none;
+  background-color: currentColor;
+  -webkit-mask: var(--crest) center / contain no-repeat;
+  mask: var(--crest) center / contain no-repeat;
+}
+
+.arms-crest {
+  width: clamp(200px, 32.5vw, 470px);
+  aspect-ratio: 800 / 840;
+  background-color: #F5F3EA;
+  -webkit-mask: var(--crest) center / contain no-repeat;
+  mask: var(--crest) center / contain no-repeat;
+  filter: drop-shadow(0 2px 20px rgba(9, 20, 13, 0.5));
+}
+
+.arms-latin {
+  margin-top: clamp(14px, 2vw, 24px);
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(19px, 2.2vw, 31px);
+  line-height: 1.1;
+  text-shadow: 0 1px 20px rgba(9, 20, 13, 0.6);
+}
+
+.arms-gloss {
+  margin-top: 11px;
+  font-family: var(--sans);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(245, 243, 234, 0.74);
+  text-shadow: 0 1px 14px rgba(9, 20, 13, 0.65);
+}
+
+/* the reading of the arms — four charges, keyed, two up. Four because four is
+   what the shield carries; the grid is not a layout waiting to be filled. */
+.blazon {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(30px, 4vw, 56px) clamp(28px, 4vw, 64px);
+}
+
+.blazon h3 {
+  font-family: var(--sans);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--brass);
+}
+
+.blazon p {
+  margin-top: 14px;
+  font-family: var(--serif);
+  font-size: clamp(16px, 1.35vw, 19px);
+  line-height: 1.46;
+  color: var(--ink);
+}
+
+/* the colophon: what the reading is dated by */
+.arms-foot {
+  margin-top: clamp(40px, 5vw, 68px);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(16px, 1.4vw, 19px);
+  color: var(--grey);
+  max-width: 34em;
+}
+
+/* ---------- the KC monogram (klingström capital) ----------
+   The supplied mark is black artwork on a white ground, so the white was keyed
+   out and the file is carried as an alpha shape. Painted with currentColor
+   through a mask, it takes the ink of whatever it sits in — paper here, cream
+   if it is ever set on a green field — instead of dragging a white box along.
+   --mark is the url and --mark-w the size, both set where it is used. */
+
+.kc-mark {
+  display: block;
+  width: var(--mark-w, 120px);
+  aspect-ratio: 416 / 406;
+  background-color: currentColor;
+  -webkit-mask: var(--mark) center / contain no-repeat;
+  mask: var(--mark) center / contain no-repeat;
+}
+
+/* the investment arm, on the holdings index: the one holding that owns a mark,
+   so it is set as a block with the monogram at its head rather than as another
+   line in a list of names */
+.arm {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: clamp(20px, 3vw, 44px);
+  align-items: start;
+  max-width: 48em;
+  color: var(--ink);
+}
+
+.arm-mark {
+  margin-top: 6px;
+  transition: color 0.25s var(--ease);
+}
+
+.arm:hover .arm-mark,
+.arm:hover .index-name,
+.arm:hover .index-arrow { color: var(--green); }
+
+.arm:hover .index-arrow { transform: translateX(6px); }
+
+/* ---------- the gazetteer (capital) ----------
+   Where the firm invests, country by country. The type roles are the inverse of
+   the blazon's — the place set in serif at size, the line beneath it small and
+   grey — so two keyed grids on one site do not read as the same habit twice. */
+
+.gazetteer {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(30px, 4vw, 52px) clamp(28px, 4vw, 64px);
+  margin-top: clamp(40px, 5vw, 64px);
+}
+
+.gazetteer h3 {
+  font-family: var(--serif);
+  font-size: clamp(21px, 2.1vw, 28px);
+  font-weight: 420;
+  line-height: 1.12;
+}
+
+.gazetteer p {
+  margin-top: 12px;
+  font-size: 14.5px;
+  line-height: 1.52;
+  color: var(--grey);
+  max-width: 30em;
+}
+
+/* the boundary of the map, set across the whole grid beneath it */
+.gazetteer-foot {
+  grid-column: 1 / -1;
+  margin-top: clamp(6px, 1.2vw, 16px);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(16px, 1.4vw, 19px);
+  line-height: 1.45;
+  color: var(--grey);
+  max-width: 36em;
+}
+
+/* ---------- the register (about, capital) ----------
+   Ownership facts set the way a register sets them: the term small in brass,
+   the value large in serif, one to a line, with nothing between the rows but
+   air. Deliberately not the timeline — no prose under the value, and here the
+   value is the object rather than the label beside it. */
+
+.ownership-lede { margin-top: clamp(26px, 3vw, 38px); }
+
+.ledger {
+  display: grid;
+  gap: clamp(26px, 3vw, 40px);
+  margin-top: clamp(44px, 5.5vw, 72px);
+}
+
+/* the capital page opens its column with the register, so it needs no lead-in */
+.ledger--flush { margin-top: 0; }
+
+.ledger-row {
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+  gap: clamp(16px, 3vw, 48px);
+  align-items: baseline;
+  max-width: 40em;
+}
+
+.ledger-term {
+  font-family: var(--sans);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--brass);
+}
+
+.ledger-value {
+  font-family: var(--serif);
+  font-size: clamp(19px, 1.9vw, 25px);
+  font-weight: 400;
+  line-height: 1.25;
+}
+
 /* ---------- timeline ---------- */
 
 .timeline { display: grid; gap: clamp(40px, 5vw, 64px); }
@@ -1263,6 +1562,7 @@ a.index-row:hover .index-arrow { color: var(--green); transform: translateX(6px)
 .footer-base {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 12px 32px;
   justify-content: space-between;
   margin-top: clamp(56px, 7vw, 90px);
@@ -1271,6 +1571,15 @@ a.index-row:hover .index-arrow { color: var(--green); transform: translateX(6px)
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: rgba(245, 243, 234, 0.5);
+}
+
+/* the seal on the closing line, sat between the two registers so it centres
+   itself without a third column having to be invented. Held at the same weight
+   as the type either side of it: an ornament that closes the page, not a logo
+   that reopens it. */
+.footer-crest {
+  --crest-w: 46px;
+  color: rgba(245, 243, 234, 0.62);
 }
 
 /* ---------- reveal animation ---------- */
@@ -1307,6 +1616,13 @@ a.index-row:hover .index-arrow { color: var(--green); transform: translateX(6px)
   .footer-cols { grid-template-columns: 1fr 1fr; }
   .footer-tag { grid-column: 1 / -1; }
   .timeline-item { grid-template-columns: 90px 1fr; }
+  /* a 16:9 strip on a phone is too short to hold the crest and its motto, so
+     the one plate carrying an overlay is given a deeper floor to stand on */
+  .plate-frame:has(.arms-overlay) img { --plate-min: 440px; }
+  .ledger-row { grid-template-columns: 1fr; gap: 10px; }
+  .arm { grid-template-columns: 1fr; gap: clamp(18px, 4vw, 26px); }
+  .gazetteer { grid-template-columns: 1fr; gap: clamp(26px, 5vw, 36px); }
+  .arm-mark { margin-top: 0; }
   .hero-foot { flex-direction: column; align-items: flex-start; gap: 24px; }
   .index-cat { margin-left: 0; width: 100%; order: 3; }
   .plate--bleed figcaption, .plate--wide figcaption { grid-template-columns: 1fr; gap: 14px; }
@@ -1417,18 +1733,31 @@ a.index-row:hover .index-arrow { color: var(--green); transform: translateX(6px)
     transform: translateY(-12px);
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.3s var(--ease), transform 0.3s var(--ease);
+    /* visibility, not just opacity: without it the closed drawer is invisible
+       but still in the tab order, so a keyboard or VoiceOver user tabs off the
+       hamburger into three links floating over nothing. Delayed on the way out
+       so the fade still plays. */
+    visibility: hidden;
+    transition: opacity 0.3s var(--ease), transform 0.3s var(--ease),
+      visibility 0s linear 0.3s;
   }
 
   body.nav-open .site-nav {
     opacity: 1;
     transform: none;
     pointer-events: auto;
+    visibility: visible;
+    transition: opacity 0.3s var(--ease), transform 0.3s var(--ease),
+      visibility 0s;
   }
 
   body.nav-open { overflow: hidden; }
 
   .site-nav a { font-size: 15px; padding-block: 12px; opacity: 1; }
+
+  /* the hamburger takes this corner on a phone — two marks either side of it
+     would leave the wordmark no room to sit in the middle */
+  .header-crest { display: none; }
 
   .brand-name { letter-spacing: 0.1em; font-size: 15px; }
   .brand-mark { height: 30px; }
@@ -1440,4 +1769,9 @@ a.index-row:hover .index-arrow { color: var(--green); transform: translateX(6px)
   .brand { gap: 10px; }
   .brand-name span { display: none; }
   .brand-name { font-size: 14px; }
+}
+
+/* a phone cannot hold two readable serif columns at this measure */
+@media (max-width: 560px) {
+  .blazon { grid-template-columns: 1fr; gap: clamp(24px, 6vw, 34px); }
 }

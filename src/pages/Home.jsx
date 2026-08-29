@@ -112,13 +112,14 @@ export default function Home() {
               </div>
               <p className="index-desc">Assessment and teacher workflows for Swedish schools. The Group's first operating company.</p>
             </Link>
-            <div className="index-row index-row--placeholder reveal">
+            <Link className="index-row reveal" to="/capital">
               <div className="index-top">
-                <span className="index-name">In diligence</span>
+                <span className="index-name">Klingström Capital</span>
+                <span className="index-arrow">→</span>
                 <span className="index-cat">Principal Investments</span>
               </div>
-              <p className="index-desc">Further holdings are announced once ownership is settled.</p>
-            </div>
+              <p className="index-desc">The Group's investment arm, wholly owned — formed to take minority positions in Nordic companies and early stakes alongside founders.</p>
+            </Link>
           </div>
         </div>
       </section>

@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { KMark } from './icons'
+import Crest from './Crest'
 
 export default function Footer() {
   return (
@@ -14,6 +15,7 @@ export default function Footer() {
           <div className="footer-col">
             <h4>Group</h4>
             <Link to="/holdings">Holdings</Link>
+            <Link to="/capital">Capital</Link>
             <Link to="/approach">Approach</Link>
           </div>
           <div className="footer-col">
@@ -28,7 +30,8 @@ export default function Footer() {
           </div>
         </div>
         <div className="footer-base">
-          <span>© {new Date().getFullYear()} Klingström Group AB</span>
+          <span>© {new Date().getFullYear()} Klingström Group</span>
+          <Crest className="crest-mark footer-crest" />
           <span>Byggt för generationer</span>
         </div>
       </div>

@@ -19,9 +19,12 @@ export default function Plate({
   variant = 'wide',
   tight = false,
   eager = false,
+  children,
 }) {
   const figure = (
     <figure className={`plate plate--${variant} reveal`}>
+      {/* anything passed as children is laid over the photograph itself —
+          see .arms-overlay. The frame is the positioning context. */}
       <div className="plate-frame">
         <img
           src={asset(file)}
@@ -30,6 +33,7 @@ export default function Plate({
           loading={eager ? undefined : 'lazy'}
           decoding="async"
         />
+        {children}
       </div>
       <figcaption>
         <span className="eyebrow">{label}</span>

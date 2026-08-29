@@ -38,17 +38,15 @@ deliberately not from hairline rules or symmetric card grids.
   composed serif passage instead of a stat grid
 - **Header**: three-zone — small-caps links left, centered KG + serif wordmark,
   quiet Contact link right; renders white over the home hero, flips to paper on scroll
-- **Hero video**: `public/hero.mp4` — the aerial Nordic forest render, trimmed to the
-  first 4.8 s (before the AI-generated artifacts appear) and encoded at 1600 px
+- **Hero video**: `public/hero.mp4` — aerial Nordic forest, 4.8 s at 1600 px,
   H.264 CRF 26 (~1.3 MB). Muted loop with scrim; pauses under `prefers-reduced-motion`;
-  `public/hero-poster.jpg` paints first. Source render: `~/Downloads`.
+  `public/hero-poster.jpg` paints first.
 - **Family-principle band**: `public/road.jpg` — a Swedish tree-lined country road at
   golden hour, full-bleed behind the proverb, under a dark green-cast overlay
   (`.band--image::before`) so the cream serif stays legible. `.band--tall` gives the
   photograph extra height to breathe.
-- **Founder's note**: the signed first-person letter on `/about` is the main
-  family-ownership signal (the pattern Swire, FAM and Møller all use). Copy lives in
-  `src/pages/About.jsx` under `.note` — edit it to your own words.
+- **Founder's note**: the signed first-person letter on `/about`. Copy lives in
+  `src/pages/About.jsx` under `.note`.
 - All design tokens live at the top of `src/styles/global.css` in `:root`
 
 ## Structure
@@ -75,18 +73,10 @@ src/
 
 ## Editing the portfolio
 
-Each holding is one `.holding-row` block — in `src/pages/Holdings.jsx` (full entry) and
+Each holding is one `.index-row` block — in `src/pages/Holdings.jsx` (full entry) and
 `src/pages/Home.jsx` (preview list). Duplicate a block and change name / category /
-description / link. Use `holding-row--placeholder` (a `div`, not a link) for
+description / link. Use `index-row--placeholder` (a `div`, not a link) for
 unannounced positions.
-
-## Placeholders to confirm before going live
-
-- **Location** — set to *Stockholm, Sweden* (hero meta, contact, footer)
-- **Emails** — the site says `@klingstromgroup.se`, but the domain you own is
-  `klingstromgroup.com`. Either register the .se or switch the addresses to .com.
-- **Founding year** — set to 2026
-- **Gradr description** — one-liners in `Home.jsx` and `Holdings.jsx`
 
 ## Branches
 
@@ -111,7 +101,7 @@ git checkout dev -- index.html && git commit && git push
 
 ### GitHub Pages (configured)
 
-`.github/workflows/deploy.yml` builds and publishes on every push to `main`.
+`.github/workflows/deploy.yml` builds and publishes on every push to `production`.
 In the repo, set **Settings → Pages → Build and deployment → Source: GitHub Actions**
 once; after that every push deploys.
 

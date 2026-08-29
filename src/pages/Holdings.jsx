@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import usePageTitle from '../hooks/usePageTitle'
 import { Arrow } from '../components/icons'
+import { asset } from '../lib/asset'
 import Plate from '../components/Plate'
 
 export default function Holdings() {
@@ -47,21 +48,28 @@ export default function Holdings() {
         </div>
       </section>
 
-      {/* Principal investments */}
+      {/* The investment arm — the one holding with a mark of its own, so it is
+          given a block rather than a row in the index above. */}
       <section className="section section--flush-top">
         <div className="container offset">
           <div className="label-col reveal">
-            <span className="section-num">Principal investments</span>
+            <span className="section-num">The investment arm</span>
           </div>
-          <div className="index-list">
-            <div className="index-row index-row--placeholder reveal">
+          <Link className="arm reveal" to="/capital">
+            <span
+              className="kc-mark arm-mark"
+              style={{ '--mark': `url(${asset('kc.png')})`, '--mark-w': 'clamp(66px, 7vw, 96px)' }}
+              aria-hidden="true"
+            />
+            <div>
               <div className="index-top">
-                <span className="index-name">In diligence</span>
-                <span className="index-cat">Undisclosed</span>
+                <span className="index-name">Klingström Capital</span>
+                <span className="index-arrow">→</span>
+                <span className="index-cat">Principal Investments &amp; Ventures</span>
               </div>
-              <p className="index-desc">The Group is establishing minority positions in Nordic companies that meet our standard. Holdings are disclosed once ownership is settled.</p>
+              <p className="index-desc">The Group's investment arm, wholly owned by the Group. It will take significant minority positions in established Nordic companies and early stakes alongside founders.</p>
             </div>
-          </div>
+          </Link>
         </div>
       </section>
 

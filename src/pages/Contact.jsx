@@ -41,9 +41,8 @@ export default function Contact() {
               <p className="contact-note">Introductions, opportunities and succession conversations.</p>
             </div>
             <div className="contact-block">
-              <h3>Office</h3>
+              <h3>Based in</h3>
               <p className="contact-value">Stockholm, Sweden</p>
-              <p className="contact-note">Visits by appointment.</p>
             </div>
           </div>
         </div>
