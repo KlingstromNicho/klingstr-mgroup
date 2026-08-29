@@ -82,8 +82,9 @@ unannounced positions.
 
 ## Placeholders to confirm before going live
 
-- **Location** — set to *Sundsvall, Sweden* (hero meta, contact, footer)
-- **Emails** — `contact@klingstromgroup.se`, `companies@klingstromgroup.se` (not registered)
+- **Location** — set to *Stockholm, Sweden* (hero meta, contact, footer)
+- **Emails** — the site says `@klingstromgroup.se`, but the domain you own is
+  `klingstromgroup.com`. Either register the .se or switch the addresses to .com.
 - **Founding year** — set to 2026
 - **Gradr description** — one-liners in `Home.jsx` and `Holdings.jsx`
 
@@ -100,7 +101,7 @@ Two details make a Vite SPA work on Pages, both already handled:
 - **Base path.** A project site is served from `/<repo>/`, so the workflow passes
   `VITE_BASE` from `actions/configure-pages`, `vite.config.js` normalises it, and
   `BrowserRouter` takes `basename={import.meta.env.BASE_URL}`. Files in `public/` are
-  referenced through the `asset()` helper in `src/pages/Home.jsx` for the same reason —
+  referenced through the `asset()` helper in `src/lib/asset.js` for the same reason —
   a bare `/hero.mp4` would 404 under a subpath.
 - **Client-side routing.** The workflow copies `dist/index.html` to `dist/404.html`;
   Pages serves that for unknown paths and React Router resolves the URL, so
