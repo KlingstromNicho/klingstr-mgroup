@@ -1,8 +1,10 @@
 name: Deploy to GitHub Pages
 
+# Only 'production' publishes to klingstromgroup.com. Day-to-day work lives on
+# 'dev' and deploys nothing, so the live site never changes by accident.
 on:
   push:
-    branches: [main]
+    branches: [production]
   workflow_dispatch:
 
 permissions:
