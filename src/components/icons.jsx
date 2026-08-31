@@ -30,6 +30,14 @@ export function Arrow() {
   )
 }
 
+export function Caret({ className = 'nav-caret' }) {
+  return (
+    <svg className={className} width="10" height="7" viewBox="0 0 10 7" fill="none" aria-hidden="true">
+      <path d="M1 1.5l4 4 4-4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
 export function ArrowLong() {
   return (
     <svg width="18" height="14" viewBox="0 0 18 14" fill="none" aria-hidden="true">

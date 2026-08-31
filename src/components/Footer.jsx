@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { KMark } from './icons'
 import Crest from './Crest'
+import Signature from './Signature'
 
 export default function Footer() {
   return (
@@ -11,7 +12,10 @@ export default function Footer() {
           <KMark className="footer-k" />
         </div>
         <div className="footer-cols">
-          <p className="footer-tag">A family-owned holding company of the North. Built for generations, run with care.</p>
+          <div className="footer-intro">
+            <p className="footer-tag">A family-owned holding company of the North. Built for generations, run with care.</p>
+            <Signature className="sig-mark footer-signature" decorative />
+          </div>
           <div className="footer-col">
             <h4>Group</h4>
             <Link to="/holdings">Holdings</Link>

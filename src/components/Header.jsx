@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
-import { KMark } from './icons'
+import { Caret, KMark } from './icons'
 import Crest from './Crest'
 
 const LINKS = [
@@ -34,23 +34,41 @@ export default function Header() {
     return () => document.body.classList.remove('nav-open')
   }, [open])
 
+  // A panel this small should close the way any menu does: on Escape, and on a
+  // press anywhere outside it. Without the second one the only way out is the
+  // caret itself, which is a fiddly target to have to find again.
+  useEffect(() => {
+    if (!open) return
+    const onKey = (e) => e.key === 'Escape' && setOpen(false)
+    const onDown = (e) => {
+      if (!e.target.closest('.header-left')) setOpen(false)
+    }
+    document.addEventListener('keydown', onKey)
+    document.addEventListener('pointerdown', onDown)
+    return () => {
+      document.removeEventListener('keydown', onKey)
+      document.removeEventListener('pointerdown', onDown)
+    }
+  }, [open])
+
   return (
     <header className={`site-header${scrolled ? ' scrolled' : ''}${light ? ' light' : ''}`}>
       <div className="container">
-        {/* One cell, so the grid stays three columns whether the nav is a row of
-            links or a hamburger and a drawer. */}
+        {/* One cell: the arms, the caret that opens them, and the panel they
+            open. Keeping the panel inside this cell is what lets it hang off
+            the crest without measuring the container. */}
         <div className="header-left">
           <button
             className="nav-toggle"
-            aria-label="Toggle menu"
+            aria-label="Menu"
             aria-expanded={open}
+            aria-controls="site-nav"
             onClick={() => setOpen((o) => !o)}
           >
-            <span></span>
-            <span></span>
+            <Crest className="crest-mark header-crest" />
+            <Caret />
           </button>
-          <Crest className="crest-mark header-crest" />
-          <nav className="site-nav" aria-label="Primary">
+          <nav id="site-nav" className="site-nav" aria-label="Primary">
             {LINKS.map((link) => (
               <NavLink key={link.to} to={link.to} onClick={() => setOpen(false)}>
                 {link.label}

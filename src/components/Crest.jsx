@@ -11,7 +11,7 @@ export default function Crest({ className = 'crest-mark' }) {
     <span
       className={className}
       aria-hidden="true"
-      style={{ '--crest': `url(${asset('crest.png')})` }}
+      style={{ '--crest': `url(${asset('crest-arms.webp')})` }}
     />
   )
 }

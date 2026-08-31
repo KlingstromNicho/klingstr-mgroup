@@ -3,6 +3,7 @@ import usePageTitle from '../hooks/usePageTitle'
 import { Arrow } from '../components/icons'
 import { asset } from '../lib/asset'
 import Plate from '../components/Plate'
+import Signature from '../components/Signature'
 import Band from '../components/Band'
 
 // The charges, read out one at a time. Four, because four is what the shield
@@ -17,8 +18,8 @@ const CHARGES = [
     body: 'Ström: a stream. The second half — patient, and in no hurry to stop.',
   },
   {
-    name: 'The two stones',
-    body: 'What stands in the way. The arms name the obstacle before they name the victory.',
+    name: 'The fox and the bear',
+    body: 'Wit on one side, weight on the other — both with a hand on the shield.',
   },
   {
     name: 'The sun',
@@ -75,8 +76,8 @@ export default function About() {
           <span
             className="arms-crest"
             role="img"
-            aria-label="The Klingström arms: a sword standing point upward out of water, between two stones, on a shield beneath a knight's helm and a sun in splendour, wreathed in acanthus, above a ribbon reading Contra Omnia Agimus."
-            style={{ '--crest': `url(${asset('crest.png')})` }}
+            aria-label="The Klingström arms: a sword point downward in water on a shield, held up by a fox and a bear, beneath a knight's helm and a sun in splendour, wreathed in acanthus, above a ribbon reading Contra Omnia Agimus."
+            style={{ '--crest': `url(${asset('crest-arms.webp')})` }}
           />
           <p className="arms-latin">Contra omnia agimus</p>
           <p className="arms-gloss">Against all things, we act</p>
@@ -111,7 +112,7 @@ export default function About() {
             <h2>Ström, as in stream.</h2>
           </div>
           <div className="reveal reveal-d1">
-            <p className="body-copy"><strong>Ström</strong> is the Swedish word for stream — a current that moves steadily, shapes everything it touches, and does not stop. <strong>Klinga</strong> is the word for a sword's blade. Whether or not the name was ever meant to carry both, the arms read it so: a blade standing out of running water.</p>
+            <p className="body-copy"><strong>Ström</strong> is the Swedish word for stream — a current that moves steadily, shapes everything it touches, and does not stop. <strong>Klinga</strong> is the word for a sword's blade. Whether or not the name was ever meant to carry both, the arms read it so: a blade driven point-first into running water.</p>
             <p className="body-copy">It is a fitting name for a group whose only strategy is to keep going.</p>
             <p className="body-copy">The mark of the Group is the K and G interlocked — the family and the group, each holding the other in place.</p>
           </div>
@@ -171,6 +172,7 @@ export default function About() {
             <p>Klingström Group exists so that the businesses I build and back have an owner who is patient, present, and unbothered by the calendar. Gradr is the first. It will not be the last.</p>
             <p>What I want from the next fifty years is plain enough: that every company here is better for having been owned by us, and that whoever holds this seat after me inherits something worth keeping.</p>
             <div className="note-sign">
+              <Signature className="sig-mark note-signature" />
               <div className="note-name">Nicholai Klingström</div>
               <div className="note-role">Founder · Stockholm, 2026</div>
             </div>
@@ -218,7 +220,7 @@ export default function About() {
               <div className="timeline-year">2026</div>
               <div>
                 <h3>The arms are taken up</h3>
-                <p>A sword out of water between two stones, and a motto: <em>contra omnia agimus</em>. The first thing the family made that was meant to outlast it.</p>
+                <p>A sword in water, a fox and a bear to hold it up, and a motto: <em>contra omnia agimus</em>. The first thing the family made that was meant to outlast it.</p>
               </div>
             </div>
             <div className="timeline-item reveal">

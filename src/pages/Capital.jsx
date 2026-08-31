@@ -154,7 +154,7 @@ export default function Capital() {
       />
 
       {/* Markets */}
-      <section className="section section--flush-top">
+      <section className="section section--after-band">
         <div className="container offset">
           <div className="label-col reveal">
             <span className="section-num">Markets</span>
