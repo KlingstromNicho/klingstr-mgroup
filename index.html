@@ -58,17 +58,21 @@
         radial-gradient(120% 90% at 50% 50%, rgba(9,20,13,.18) 0%, rgba(9,20,13,.58) 100%);
     }
 
-    /* Black engraving on transparent alpha, so it must be inverted to sit on
-       the ink. Mirrors .foot's inset to bracket the plate top and bottom. */
+    /* The arms: line art on a transparent ground, so the plate is used as a
+       MASK and painted in the paper cream rather than dropped in as an <img>
+       and inverted. Mirrors .foot's inset to bracket the plate top and bottom;
+       the ratio is the file's own so nothing has to be measured twice. */
     .crest {
       position: absolute;
       z-index: 2;
       top: clamp(22px, 4vh, 40px);
       left: 50%;
       transform: translateX(-50%);
-      height: clamp(44px, 5.5vw, 64px);
-      width: auto;
-      filter: invert(1);
+      width: clamp(46px, 5.8vw, 68px);
+      aspect-ratio: 1000 / 947;
+      background-color: var(--paper);
+      -webkit-mask: url("/crest-arms.webp") center / contain no-repeat;
+      mask: url("/crest-arms.webp") center / contain no-repeat;
       opacity: .82;
     }
 
@@ -129,7 +133,7 @@
     <video src="/hero.mp4" poster="/hero-poster.jpg" autoplay muted loop playsinline aria-hidden="true"></video>
     <div class="scrim" aria-hidden="true"></div>
 
-    <img class="crest" src="/crest.png" alt="" aria-hidden="true" width="800" height="840">
+    <span class="crest" aria-hidden="true"></span>
 
     <div class="plate">
       <svg class="mark" viewBox="-50 220 1080 1120" aria-hidden="true">
