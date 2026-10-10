@@ -243,20 +243,6 @@
     .key--1 { background: var(--green); }
     .key--2 { background: var(--green-tint); }
 
-    /* The hand, closing the record. Line art on a transparent ground, so it is
-       a MASK painted in currentColor rather than an <img>: it takes the ink of
-       the page instead of dragging a white box along with it. */
-    .sig-mark {
-      display: block;
-      width: clamp(180px, 17vw, 240px);
-      aspect-ratio: 457 / 184.8;
-      margin-top: clamp(48px, 6vw, 80px);
-      margin-left: -0.5%;
-      background-color: var(--ink);
-      -webkit-mask: url("/signature.svg") left center / contain no-repeat;
-      mask: url("/signature.svg") left center / contain no-repeat;
-    }
-
     /* ---------- the base line, on the green ---------- */
 
     .site-footer {
@@ -396,8 +382,6 @@
               <dd class="entry-note">The United Kingdom and Sweden first, then Germany, Belgium, the Netherlands and Norway.</dd>
             </div>
           </dl>
-          <!-- signed by hand, under the figures -->
-          <span class="sig-mark" aria-hidden="true"></span>
           </div>
         </div>
       </div>
